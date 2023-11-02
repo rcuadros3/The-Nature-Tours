@@ -1,9 +1,8 @@
 /* eslint-disable */
-
 export const displayMap = locations => {
-  mapboxgl.accessToken = 
+  mapboxgl.accessToken =
     'pk.eyJ1IjoicmN1YWRyb3MiLCJhIjoiY2xubm4xNmp2MDYyazJrcDF1ZmZqeTFjeiJ9.qnqdmvt7ZnmwLYeWfxs9Fg';
-  
+
   var map = new mapboxgl.Map({
     container: 'map',
     //   style: 'mapbox://styles/mapbox/streets-v11'

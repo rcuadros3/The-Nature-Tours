@@ -29,23 +29,37 @@ const createSendToken = (user, statusCode, res) => {
   res.status(statusCode).json({
     status: 'success',
     token,
-    data: { user },
+    data: {
+      user,
+    },
   });
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
+  const { name, email, password, passwordConfirm } = req.body;
+  //1. chec if name, email password and passwordConfirm exist
+  if (!name || !email || !password || !passwordConfirm) {
+    return next(
+      new AppError(
+        'Please provide name, email, password, and confirmPassword!',
+        400,
+      ),
+    );
+  }
+
+  //2. chec if password and passwordConfirm is correct
+  if (password !== passwordConfirm) {
+    return next(new AppError('Passwords do not match', 400));
+  }
+  //3. if everything ok, screate user
   const newUser = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
+    name,
+    email,
+    password,
+    passwordConfirm,
   });
-
-  const url = `${req.protocol}://${req.get('host')}/me`;
-  console.log(url);
-  await new Email(newUser, url).sendWelcome();
-
-  createSendToken(newUser, 201, res);
+  //3. if everything ok, send token to client
+  createSendToken(newUser, 200, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {

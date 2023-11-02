@@ -29,12 +29,12 @@ const upload = multer({
   fileFilter: multerFilter,
 });
 
-exports.updateUserPhoto = upload.single('photo');
+exports.uploadUserPhoto = upload.single('photo');
 
 exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   if (!req.file) return next();
 
-  req.file.filename = `user-${req.user.id}-${Date.now()}`;
+  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
 
   await sharp(req.file.buffer)
     .resize(500, 500)
@@ -81,7 +81,9 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: { user: updatedUser },
+    data: {
+      user: updatedUser,
+    },
   });
 });
 
